@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday, Superstar!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ffdde1, #f9c6d4);
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      margin-top: 30px;
+      color: #ff4081;
+      animation: bounce 1.5s infinite;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+
+    .message {
+      font-size: 1.5em;
+      margin: 20px auto;
+      max-width: 700px;
+      color: #b71c1c;
+      position: relative;
+      z-index: 1;
+      padding: 10px 20px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      color: #880e4f;
+    }
+
+    /* Manual Slideshow */
+    .slideshow-container {
+      position: relative;
+      max-width: 300px;
+      margin: 20px auto;
+      z-index: 1;
+      border: 5px solid #ff80ab;
+      border-radius: 25px;
+      overflow: hidden;
+      background: white;
+      padding: 10px;
+    }
+
+    .slide {
+      display: none;
+    }
+    .slide img {
+      width: 100%;
+      height: 400px;
+      object-fit: contain;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      background-color: #fff; 
+      cursor: zoom-in;
+    }
+
+    .fade {
+      animation: fadeEffect 1s ease-in-out;
+    }
+
+    @keyframes fadeEffect {
+      from {opacity: 0.2;}
+      to {opacity: 1;}
+    }
+
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 18px;
+      color: #fff;
+      background-color: rgba(255, 64, 129, 0.7);
+      font-weight: bold;
+      font-size: 20px;
+      user-select: none;
+      border-radius: 50%;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      z-index: 10;
+    }
+
+    .next {
+      right: 10px;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .prev:hover, .next:hover {
+      background-color: #ff4081;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    audio {
+      position: fixed;
+      bottom: 20px;
+      left: 20px; /* moved audio player to bottom right */
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .floating {
+      position: absolute;
+      animation: floatUp 15s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.6; }
+      80% { opacity: 0.6; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-25px) rotate(5deg); }
+    }
+
+    .balloon-img {
+      position: absolute;
+      top: 100px;
+      right: 150px;
+      width: 300px;
+      animation: float 4s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    #funButton {
+      position: absolute;
+      top: 350px;
+      left: 250px;
+      background-color: #ff4081;
+      color: white;
+      padding: 18px 30px;
+      border-radius: 35px;
+      cursor: grab;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+      font-size: 1.1em;
+      font-weight: bold;
+      z-index: 3;
+      border: 3px dashed #fff;
+      user-select: none;
+    }
+
+    @keyframes taunt {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(-8deg); }
+      75% { transform: scale(1.1) rotate(8deg); }
+    }
+
+    .taunting {
+      animation: taunt 0.4s ease-in-out;
+    }
+
+    .footer-buttons {
+      position: fixed;
+      bottom: 30px;
+      left: 400px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .footer-buttons button {
+      background-color: #ff4081;
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      margin: 15px;
+      font-size: 1.1em;
+      border-radius: 35px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      font-weight: bold;
+    }
+
+    .footer-buttons button:hover {
+      background-color: #e0005a;
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    /* Letter Modal */
+    #letterModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    #letterContent {
+      background: #fffafa;
+      color: #880e4f;
+      padding: 40px;
+      border-radius: 25px;
+      max-width: 550px;
+      font-size: 1.3em;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+      position: relative;
+      animation: popIn 0.5s ease-out;
+      text-align: left;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    #closeLetter {
+      position: absolute;
+      top: 15px; right: 25px;
+      font-size: 1.8em;
+      color: #ff4081;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #closeLetter:hover {
+      transform: rotate(90deg);
+    }
+
+    #letterContent h2 {
+      color: #d81b60;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Confetti animation */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff4081;
+      border-radius: 50%;
+      opacity: 0;
+      animation: confettiFall 5s infinite;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Fullscreen modal styles for images */
+    #fullscreenModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      cursor: zoom-out;
+      
+    }
+
+    #fullscreenImg {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 15px;
+      box-shadow: 0 0 30px black;
+    }
+
+    #closeFullscreen {
+      position: absolute;
+      top: 20px; right: 30px;
+      font-size: 2.5em;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+      z-index: 10001;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Confetti Elements -->
+  <div id="confetti-container"></div>
+
+  <!-- Floating balloon -->
+  <img src="WhatsApp Image 2025-07-10 at 18.49.30_805b5223.png" alt="Balloon" class="balloon-img" />
+
+  <!-- Floating upward balloons -->
+  <img src="heartBalloon.png" class="floating" style="left: 8%; width: 180px; animation-delay: 0s;" alt="Heart Balloon" />
+  <img src="heartBalloon.png" class="floating" style="left: 28%; width: 140px; animation-delay: 2s;" alt="Heart Balloon" />
+  <img src="heartBalloon.png" class="floating" style="left: 48%; width: 180px; animation-delay: 4s;" alt="Heart Balloon" />
+  <img src="heartBalloon.png" class="floating" style="left: 68%; width: 140px; animation-delay: 6s;" alt="Heart Balloon" />
+  <img src="heartBalloon.png" class="floating" style="left: 88%; width: 180px; animation-delay: 8s;" alt="Heart Balloon" />
+
+  <h1>🎉 Happy Birthday, My Amazing Princess! 👑</h1>
+
+  <div class="message">
+    Get ready for a day packed with mega smiles, awesome surprises, and all the glitter and magic you can handle! You're truly one of a kind. Let's make some unforgettable memories! 💕✨
+  </div>
+
+  <!-- Slideshow -->
+  <div class="slideshow-container">
+    <div class="slide fade">
+      <img src="photo1.jpg" alt="Photo 1" />
+    </div>
+    <div class="slide fade">
+      <img src="photo2.jpg" alt="Photo 2" />
+    </div>
+    <div class="slide fade">
+      <img src="photo3.jpg" alt="Photo 3" />
+    </div>
+    <div class="slide fade">
+      <img src="photo4.jpg" alt="Photo 4" />
+    </div>
+    <div class="slide fade">
+      <img src="photo5.jpg" alt="Photo 5" />
+    </div>
+    <div class="slide fade">
+      <img src="photo6.jpg" alt="Photo 6" />
+    </div>
+    <div class="slide fade">
+      <img src="photo7.jpg" alt="Photo 7" />
+    </div>
+    <div class="slide fade">
+      <img src="photo8.jpg" alt="Photo 8" />
+    </div>
+    <div class="slide fade">
+      <img src="photo9.jpg" alt="Photo 9" />
+    </div>
+    <div class="slide fade">
+      <img src="photo10.jpg" alt="Photo 10" />
+    </div>
+    <div class="slide fade">
+      <img src="photo11.jpg" alt="Photo 11" />
+    </div>
+    <div class="slide fade">
+      <img src="photo12.jpg" alt="Photo 12" />
+    </div>
+    <div class="slide fade">
+      <img src="photo13.jpg" alt="Photo 13" />
+    </div>
+    <div class="slide fade">
+      <img src="photo14.jpg" alt="Photo 14" />
+    </div>
+    <div class="slide fade">
+      <img src="photo15.jpg" alt="Photo 15" />
+    </div>
+
+    <a class="prev" onclick="changeSlide(-1)">❮</a>
+    <a class="next" onclick="changeSlide(1)">❯</a>
+  </div>
+
+  <!-- Fun Button -->
+  <div id="funButton">🎁 ISPAI CLICK KAR BOT.</div>
+
+  <!-- Cake Button -->
+  <div class="footer-buttons">
+    <button id="cakeButton">🎂 Ready to Party? Tap for Cake!</button>
+  </div>
+
+  <!-- Letter Modal -->
+  <div id="letterModal">
+    <div id="letterContent">
+      <button id="closeLetter" onclick="closeLetter()">×</button>
+      <h2>💌 A Super Special Birthday Letter Just For You!</h2>
+      <p>
+        Hey Beautiful ,
+
+On your special day, I just wanted to shower you with a little extra love and remind you how amazing you truly are! Your laughter is my all-time favorite sound, and having you around fills my world with genuine happiness and fun. You're a real gem, and I’m so grateful for our friendship.
+
+May your birthday be just as awesome as you are—packed with your favorite things and overflowing with good vibes! Keep dreaming big, keep shining bright, and always remember you’re cherished so much.
+
+With all my love and friendship,
+💖 VARUN 💖
+      </p>
+    </div>
+  </div>
+
+  <!-- Fullscreen Image Modal -->
+  <div id="fullscreenModal">
+    <span id="closeFullscreen">&times;</span>
+    <img id="fullscreenImg" src="" alt="Fullscreen Photo" />
+  </div>
+
+  <!-- Music -->
+  <audio id="birthdayAudio" controls autoplay loop>
+    <source src="Sahiba(KoshalWorld.Com) (1)-[AudioTrimmer.com].mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+<script>
+  // Manual Slideshow
+  let slideIndex = 1;
+  showSlide(slideIndex);
+
+  function changeSlide(n) {
+    showSlide(slideIndex + n);
+  }
+
+  function showSlide(n) {
+    const slides = document.getElementsByClassName("slide");
+    if (n > slides.length) {
+      slideIndex = 1;
+    } else if (n < 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex = n;
+    }
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    slides[slideIndex - 1].style.display = "block";
+  }
+
+  // Confetti animation
+  const confettiContainer = document.getElementById('confetti-container');
+  function createConfetti() {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+    confetti.style.animationDelay = `${Math.random() * 3}s`;
+    confettiContainer.appendChild(confetti);
+    confetti.addEventListener('animationend', () => confetti.remove());
+  }
+  setInterval(createConfetti, 200);
+
+  // ENHANCED Catch Me Button Logic
+  const funButton = document.getElementById("funButton");
+  let hoverCount = 0;
+  const maxHover = 8 
+
+const taunts = [
+  "Abe pakad bot!",
+  "Chii noob !!!",
+  "ider hu !",
+  "phir khati h 1v1 aja",
+  "isko toh pakda nhi jaa rh ",
+  "Faster, faster!",
+  "bhaag nooooooob",
+  "chal last ab nhi karunga",
+];
+
+let tauntIndex = 0; // keep track of current taunt
+
+funButton.addEventListener("mouseover", () => {
+  if (funButton.dataset.caught) return; // Stop if already caught
+
+  if (hoverCount < maxHover) {
+    funButton.style.transition = 'none';
+
+    const maxX = window.innerWidth - funButton.offsetWidth - 20;
+    const maxY = window.innerHeight - funButton.offsetHeight - 20;
+    funButton.style.left = `${Math.random() * maxX}px`;
+    funButton.style.top = `${Math.random() * maxY}px`;
+
+    funButton.innerHTML = taunts[tauntIndex]; // show current taunt
+    tauntIndex = (tauntIndex + 1) % taunts.length; // move to next taunt cyclically
+
+    funButton.classList.add('taunting');
+    setTimeout(() => {
+      funButton.classList.remove('taunting');
+    }, 400);
+
+    hoverCount++;
+  } else {
+    funButton.innerHTML = "😭 Okay, you win! I give up!";
+    funButton.style.cursor = "pointer";
+    funButton.style.transition = 'transform 0.3s ease, background-color 0.3s ease';
+    funButton.dataset.caught = "true"; // Mark as caught
+  }
+});
+
+
+  funButton.addEventListener("click", () => {
+    if (funButton.dataset.caught) {
+      funButton.style.transform = 'scale(0)';
+      setTimeout(() => {
+        openLetter();
+        funButton.style.display = "none";
+      }, 300);
+    }
+  });
+
+  // Letter Modal control
+  function openLetter() {
+    document.getElementById("letterModal").style.display = "flex";
+  }
+  function closeLetter() {
+    document.getElementById("letterModal").style.display = "none";
+  }
+
+  // Play music on cake button click and auto-play as possible
+  window.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById("birthdayAudio");
+    audio.play().catch(() => {
+      // If autoplay blocked, user can start manually
+    });
+  });
+
+  document.getElementById('cakeButton').addEventListener('click', () => {
+    const audio = document.getElementById("birthdayAudio");
+    audio.play().catch(() => {});
+    setTimeout(() => {
+      window.location.href = "cakeBlow.html";
+    }, 300); // Delay navigation so music triggers
+  });
+
+  /*** Fullscreen Image Modal Logic ***/
+  const fullscreenModal = document.getElementById('fullscreenModal');
+  const fullscreenImg = document.getElementById('fullscreenImg');
+  const closeFullscreen = document.getElementById('closeFullscreen');
+
+  // Add click listeners to slideshow images to open modal
+  const slideImages = document.querySelectorAll('.slide img');
+  slideImages.forEach(img => {
+    img.addEventListener('click', () => {
+      fullscreenImg.src = img.src;
+      fullscreenModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    });
+  });
+
+  // Close modal on X click
+  closeFullscreen.addEventListener('click', () => {
+    fullscreenModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  });
+
+  // Close modal clicking outside image
+  fullscreenModal.addEventListener('click', (e) => {
+    if (e.target === fullscreenModal) {
+      fullscreenModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+  });
+</script>
+
+</body>
+</html>
